@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مقدمة في الحاسب الآلي و C++ — مذكرة مراجعة</title>
+<style>
+  :root{
+    box-sizing:border-box;
+    --bg:#F6F7FA; --surface:#FFFFFF; --ink:#1B2333; --muted:#5B6472;
+    --accent:#2F5DD6; --accent-soft:#EAF0FF; --mono-bg:#101726; --mono-ink:#CFE8E2;
+    --mono-accent:#59D8B8; --border:#E1E4EC; --table-head:#1B2333;
+    --wa:#1DA851; --wa-dark:#128C43;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:inherit}
+  html{scroll-padding-top:env(safe-area-inset-top,0px); scroll-behavior:smooth;}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#12151D; --surface:#191D28; --ink:#E7E9EE; --muted:#9AA2B1;
+      --accent:#6E93FF; --accent-soft:#202A44; --mono-bg:#0B0F17; --mono-ink:#D6F3EC;
+      --mono-accent:#57E3BC; --border:#2A2F3C; --table-head:#232838;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#12151D; --surface:#191D28; --ink:#E7E9EE; --muted:#9AA2B1;
+    --accent:#6E93FF; --accent-soft:#202A44; --mono-bg:#0B0F17; --mono-ink:#D6F3EC;
+    --mono-accent:#57E3BC; --border:#2A2F3C; --table-head:#232838;
+  }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Segoe UI",Tahoma,"Geeza Pro",-apple-system,Arial,sans-serif;
+    line-height:1.85;
+  }
+  .wa-bar{
+    display:block; background:var(--wa); color:#fff; text-align:center;
+    padding:.9rem 1rem; padding-top:calc(.9rem + env(safe-area-inset-top,0px));
+    text-decoration:none; font-weight:700; font-size:1rem;
+  }
+  .wa-bar:hover{background:var(--wa-dark);}
+  .wa-bar .sub{display:block; font-weight:400; font-size:.85rem; opacity:.9; margin-top:.15rem;}
+  .wrap{max-width:760px; margin:0 auto; padding:2.5rem 1.25rem 5rem;}
+  header.hero{
+    padding:2.5rem 1.5rem; border-radius:18px; background:var(--surface);
+    border:1px solid var(--border); margin-bottom:2rem;
+  }
+  .kicker{color:var(--accent); font-weight:600; font-size:.95rem; margin:0 0 .5rem;}
+  h1{
+    font-size:clamp(1.6rem,4vw,2.2rem); line-height:1.5; margin:0 0 .6rem;
+  }
+  .brand{color:var(--accent); font-weight:700;}
+  .sub{color:var(--muted); font-size:1rem; margin:0;}
+  nav.toc{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:1.25rem 1.5rem; margin-bottom:2.5rem;
+  }
+  nav.toc h2{font-size:.95rem; margin:0 0 .75rem; color:var(--muted); font-weight:600;}
+  nav.toc ol{margin:0; padding-right:1.3rem;}
+  nav.toc li{margin:.4rem 0;}
+  nav.toc a{color:var(--ink); text-decoration:none; border-bottom:1px solid var(--border);}
+  nav.toc a:hover{color:var(--accent); border-color:var(--accent);}
+  section.chapter{margin-bottom:3rem;}
+  h2.chap-title{
+    font-size:1.4rem; margin:0 0 1.3rem; padding-bottom:.6rem;
+    border-bottom:2px solid var(--accent);
+  }
+  h2.chap-title span.num{color:var(--accent); margin-left:.4rem;}
+  h3{
+    font-size:1.05rem; margin:1.8rem 0 .6rem; padding-right:.75rem;
+    border-right:4px solid var(--accent); line-height:1.5;
+  }
+  p{margin:.6rem 0;}
+  ul{padding-right:1.3rem; margin:.5rem 0;}
+  li{margin:.4rem 0;}
+  .callout{
+    background:var(--accent-soft); border:1px solid var(--border); border-radius:12px;
+    padding:1rem 1.2rem; margin:1.2rem 0; font-size:.95rem;
+  }
+  .tblwrap{overflow-x:auto; margin:1rem 0; border-radius:12px; border:1px solid var(--border);}
+  table{width:100%; border-collapse:collapse; font-size:.92rem; min-width:480px;}
+  th{
+    background:var(--table-head); color:#fff; text-align:start; padding:.65rem .9rem;
+    font-weight:600; white-space:nowrap;
+  }
+  td{padding:.65rem .9rem; border-top:1px solid var(--border); vertical-align:top;}
+  tr:nth-child(even) td{background:var(--surface);}
+  pre{
+    background:var(--mono-bg); color:var(--mono-ink); padding:1rem 1.2rem;
+    border-radius:12px; overflow-x:auto; font-size:.87rem; line-height:1.6;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+    margin:1rem 0; direction:ltr; text-align:left;
+  }
+  code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+    direction:ltr; unicode-bidi:embed;
+  }
+  p code, li code, td code{
+    background:var(--accent-soft); padding:.1rem .35rem; border-radius:5px; font-size:.88em;
+    display:inline-block;
+  }
+  pre .kw{color:var(--mono-accent); font-weight:600;}
+  pre .str{color:#F2C879;}
+  pre .com{color:#8892A6; font-style:italic;}
+  .exercise{
+    border-right:4px solid var(--mono-accent); background:var(--accent-soft);
+    padding:.9rem 1.2rem; border-radius:12px 0 0 12px; margin:1.3rem 0; font-size:.95rem;
+  }
+  .exercise b{color:var(--accent);}
+  footer{
+    text-align:center; color:var(--muted); font-size:.9rem; margin-top:3rem;
+    padding-top:1.5rem; border-top:1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+  <a class="wa-bar" href="https://chat.whatsapp.com/KmlZqt2T4lCLthTQBBI2FB?s=cl&amp;p=a&amp;mlu=4&amp;ilr=4" target="_blank" rel="noopener noreferrer">
+    🟢 انضم لجروب الواتساب لمزيد من المحاضرات
+    <span class="sub">اضغط هنا للانضمام</span>
+  </a>
+
+  <div class="wrap">
+
+  <header class="hero">
+    <p class="kicker">مذكرة مراجعة</p>
+    <h1>مقدمة في الحاسب الآلي ولغة C++ <span class="brand">𝐂𝐑𝐄𝐀𝐓𝐈𝐕𝐄 𝐓𝐄𝐀𝐌</span></h1>
+    <p class="sub">من العداد اليدوي إلى أول برنامج C++ — تاريخ الحاسوب، مكوناته، وأساسيات اللغة.</p>
+  </header>
+
+  <nav class="toc">
+    <h2>المحتويات</h2>
+    <ol>
+      <li><a href="#ch1">تاريخ الحاسوب</a></li>
+      <li><a href="#ch2">مكونات الحاسوب بالتفصيل</a></li>
+      <li><a href="#ch3">الدرس الأول في أساسيات C++</a></li>
+      <li><a href="#ch4">المتغيرات وأنواع البيانات في C++</a></li>
+    </ol>
+  </nav>
+
+  <section class="chapter" id="ch1">
+    <h2 class="chap-title"><span class="num">01</span>تاريخ الحاسوب</h2>
+    <p>قبل ما نبدأ نتعلم البرمجة، من المفيد إننا نعرف إزاي الحاسوب اتطور عبر التاريخ، لأن فهم هذا التطور يساعدنا في فهم سبب عمل الأجهزة والبرامج بالشكل اللي بنشوفه بيه النهاردة.</p>
+
+    <h3>1. بدايات الحوسبة (قبل الكهرباء)</h3>
+    <p><strong>العداد (الأباكوس) — من آلاف السنين.</strong> يُعتبر أول أداة استخدمها الإنسان لإجراء العمليات الحسابية: إطار خشبي بخرزات يُستخدم للعد والجمع والطرح.</p>
+    <p><strong>آلة باسكال الحاسبة — 1642.</strong> صمم العالم الفرنسي بليز باسكال أول آلة ميكانيكية قادرة على الجمع والطرح التلقائي باستخدام التروس.</p>
+    <p><strong>المحرك التحليلي — 1837.</strong> اقترح العالم البريطاني تشارلز باباج تصميم آلة ميكانيكية معقدة عُرفت بـ"المحرك التحليلي"، احتوت على وحدة حسابية وذاكرة ووحدة إدخال/إخراج — وهو ما يشبه فكرة الحاسوب الحديث. لهذا، يُلقَّب باباج بـ"أبو الحاسوب".</p>
+    <p><strong>أول مبرمجة في التاريخ — آدا لوفلايس.</strong> كتبت مجموعة من التعليمات لتشغيل المحرك التحليلي الخاص بباباج، وبذلك تُعد أول شخص في التاريخ يكتب "برنامج حاسوبي".</p>
+
+    <h3>2. أجيال الحاسوب الخمسة</h3>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>الجيل</th><th>الفترة الزمنية</th><th>أهم الخصائص</th></tr></thead>
+        <tbody>
+          <tr><td>الجيل الأول</td><td>1940 – 1956</td><td>استخدم الصمامات المفرغة؛ أجهزة ضخمة كانت تملأ غرفة كاملة وتستهلك طاقة هائلة (مثل جهاز ENIAC).</td></tr>
+          <tr><td>الجيل الثاني</td><td>1956 – 1963</td><td>حلت الترانزستورات محل الصمامات المفرغة، مما جعل الأجهزة أصغر وأسرع وأكثر كفاءة في استهلاك الطاقة.</td></tr>
+          <tr><td>الجيل الثالث</td><td>1964 – 1971</td><td>اختراع الدوائر المتكاملة، التي جمعت آلاف الترانزستورات في شريحة واحدة صغيرة.</td></tr>
+          <tr><td>الجيل الرابع</td><td>1971 – حتى الآن</td><td>ظهور المعالج الدقيق، الذي يضع وحدة معالجة كاملة على شريحة واحدة — وهو أساس أجهزة الحاسوب الشخصية الحديثة.</td></tr>
+          <tr><td>الجيل الخامس</td><td>الحاضر والمستقبل</td><td>حواسيب مبنية على الذكاء الاصطناعي وتعلم الآلة والمعالجة المتوازية فائقة السرعة.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">💡 أول حاسوب شخصي منتشر تجاريًا كان جهاز Altair 8800 عام 1975؛ وبعده ظهرت شركات مثل Apple وIBM لتطرح أجهزة الحاسوب الشخصية اللي بنعرفها النهاردة.</div>
+  </section>
+
+  <section class="chapter" id="ch2">
+    <h2 class="chap-title"><span class="num">02</span>مكونات الحاسوب بالتفصيل</h2>
+    <p>من ناحية المكونات، يُقسَّم الحاسوب إلى جزأين رئيسيين: العتاد (Hardware) وهو الأجزاء المادية الملموسة، والبرمجيات (Software) وهي مجموعة التعليمات التي تُشغِّل هذا العتاد. هنا هنركز على مكونات العتاد الأساسية.</p>
+
+    <h3>1. المعالج المركزي (CPU)</h3>
+    <p>يُعتبر "عقل" الحاسوب، وهو المسؤول عن تنفيذ جميع التعليمات والعمليات الحسابية والمنطقية. ويتكون من:</p>
+    <ul>
+      <li><strong>وحدة الحساب والمنطق (ALU):</strong> تنفذ العمليات الحسابية (جمع، طرح...) والعمليات المنطقية (مقارنة، شروط...).</li>
+      <li><strong>وحدة التحكم (CU):</strong> تدير وتنسق عمل جميع أجزاء الحاسوب وتوجه تدفق البيانات بين الوحدات.</li>
+      <li><strong>السجلات (Registers):</strong> ذاكرة صغيرة جدًا وفائقة السرعة داخل المعالج تخزن البيانات التي يعمل عليها المعالج مباشرة.</li>
+      <li><strong>الذاكرة المخبأة (Cache):</strong> ذاكرة سريعة قريبة من المعالج تُستخدم لتخزين البيانات الأكثر استخدامًا لتسريع الأداء.</li>
+    </ul>
+
+    <h3>2. الذاكرة</h3>
+    <ul>
+      <li><strong>RAM:</strong> ذاكرة مؤقتة سريعة يستخدمها الحاسوب لتخزين البيانات والبرامج أثناء التشغيل فقط؛ تُفقد محتوياتها عند إغلاق الجهاز (ذاكرة متطايرة).</li>
+      <li><strong>ROM:</strong> ذاكرة دائمة تحتفظ بالبيانات حتى بعد إغلاق الجهاز، وعادة ما تحتوي على تعليمات الإقلاع الأساسية للجهاز.</li>
+    </ul>
+
+    <h3>3. وحدات التخزين</h3>
+    <ul>
+      <li><strong>HDD:</strong> وحدة تخزين ميكانيكية تستخدم أقراصًا مغناطيسية دوارة؛ سعة كبيرة وسعر منخفض نسبيًا.</li>
+      <li><strong>SSD:</strong> وحدة تخزين إلكترونية بدون أجزاء متحركة، أسرع بكثير من الـ HDD.</li>
+      <li><strong>وحدات التخزين الخارجية:</strong> مثل الفلاشات وكروت الذاكرة.</li>
+    </ul>
+
+    <h3>4. اللوحة الأم (Motherboard)</h3>
+    <p>اللوحة الرئيسية التي تُركَّب وتُوصَّل عليها جميع مكونات الحاسوب؛ تحتوي على منافذ توصيل للمعالج والذاكرة وكروت التوسعة ومزود الطاقة وغيرها.</p>
+
+    <h3>5. وحدات الإدخال</h3>
+    <p>هي الأجهزة التي تُدخل البيانات إلى الحاسوب، مثل: لوحة المفاتيح، الماوس، الماسح الضوئي، الميكروفون، والكاميرا.</p>
+
+    <h3>6. وحدات الإخراج</h3>
+    <p>هي الأجهزة التي يعرض من خلالها الحاسوب النتائج للمستخدم، مثل: الشاشة، الطابعة، والسماعات.</p>
+
+    <h3>7. مكونات مهمة أخرى</h3>
+    <ul>
+      <li><strong>كارت الشاشة (GPU):</strong> معالج متخصص في التعامل مع الرسوميات والصور والفيديو.</li>
+      <li><strong>مزود الطاقة (PSU):</strong> يحوّل الكهرباء القادمة من المصدر إلى الجهد المناسب لتشغيل جميع مكونات الجهاز.</li>
+      <li><strong>المنافذ (Ports):</strong> مثل منافذ USB وHDMI التي تربط الحاسوب بالأجهزة الخارجية.</li>
+    </ul>
+  </section>
+
+  <section class="chapter" id="ch3">
+    <h2 class="chap-title"><span class="num">03</span>الدرس الأول في أساسيات C++</h2>
+
+    <h3>1. ما هي لغة C++؟</h3>
+    <p>لغة C++ هي لغة برمجة قوية ومتعددة الأغراض، طورها عالم الحاسوب الدنماركي بيارن ستروستروب في مختبرات Bell Labs في أوائل الثمانينيات كامتداد للغة C، مع إضافة مفاهيم البرمجة الكائنية. تُستخدم اليوم في بناء أنظمة التشغيل والألعاب والبرامج عالية الأداء والأنظمة المدمجة.</p>
+    <p>ليه نبدأ بـ C++؟ لأنها تعلمك أساسيات البرمجة بعمق (إزاي تعمل إدارة الذاكرة، وإزاي الحاسوب بيشتغل من الداخل)، وتُعتبر أساسًا ممتازًا لتعلم لغات تانية لاحقًا زي Java وC# وPython.</p>
+
+    <h3>2. إيه اللي محتاجه عشان تبدأ؟</h3>
+    <ul>
+      <li><strong>محرر أكواد أو بيئة تطوير (IDE):</strong> زي Code::Blocks أو Dev-C++ أو Visual Studio Code.</li>
+      <li><strong>مترجم (Compiler):</strong> برنامج يحوّل الكود اللي بتكتبه إلى لغة يفهمها الحاسوب، زي GCC أو MSVC.</li>
+    </ul>
+
+    <h3>3. البنية الأساسية لأي برنامج C++</h3>
+    <p>عادةً يتكون أي برنامج C++ من العناصر التالية:</p>
+    <ul>
+      <li>مكتبات تُستدعى في بداية الملف باستخدام <code>#include</code></li>
+      <li>دالة <code>main()</code>، وهي نقطة بداية التنفيذ لأي برنامج</li>
+      <li>مجموعة من الأوامر (statements) داخل أقواس <code>{ }</code></li>
+      <li>الجملة <code>return 0;</code> في نهاية الدالة main تشير إلى انتهاء البرنامج بنجاح</li>
+    </ul>
+
+    <h3>4. أول برنامج لك: Hello World</h3>
+    <p>البرنامج التالي هو أبسط برنامج ممكن تكتبه في C++، وهو بيطبع رسالة ترحيب على الشاشة:</p>
+    <pre><code><span class="com">// My first C++ program</span>
+<span class="kw">#include</span> &lt;iostream&gt;
+<span class="kw">using namespace</span> std;
+
+<span class="kw">int</span> main() {
+    cout &lt;&lt; <span class="str">"Hello, World!"</span> &lt;&lt; endl;
+    <span class="kw">return</span> 0;
+}</code></pre>
+
+    <h3>5. شرح سطر بسطر</h3>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>السطر</th><th>الشرح</th></tr></thead>
+        <tbody>
+          <tr><td><code>#include &lt;iostream&gt;</code></td><td>تستدعي مكتبة الإدخال/الإخراج، ولازمة عشان نستخدم أوامر الطباعة زي <code>cout</code>.</td></tr>
+          <tr><td><code>using namespace std;</code></td><td>تسمح باستخدام عناصر المكتبة القياسية (زي <code>cout</code>) مباشرة، من غير كتابة <code>std::</code> قبلها كل مرة.</td></tr>
+          <tr><td><code>int main()</code></td><td>الدالة الرئيسية اللي بيبدأ منها تنفيذ أي برنامج C++؛ كلمة <code>int</code> تعني إنها بترجع قيمة رقمية.</td></tr>
+          <tr><td><code>{ }</code></td><td>الأقواس المعقوفة تحدد بداية ونهاية جسم الدالة (مجموعة الأوامر المراد تنفيذها).</td></tr>
+          <tr><td><code>cout &lt;&lt; "Hello, World!" &lt;&lt; endl;</code></td><td>تطبع النص الموجود بين علامتي التنصيص على الشاشة، ثم تنتقل لسطر جديد عن طريق <code>endl</code>.</td></tr>
+          <tr><td><code>return 0;</code></td><td>ترجع القيمة صفر لنظام التشغيل لتوضيح إن البرنامج انتهى بنجاح من غير أخطاء.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>6. قواعد أساسية لازم تفتكرها</h3>
+    <ul>
+      <li>كل جملة (statement) في C++ لازم تنتهي بفاصلة منقوطة <code>;</code></li>
+      <li>لغة C++ حساسة لحالة الأحرف، يعني <code>Main</code> مختلفة عن <code>main</code></li>
+      <li>التعليقات (Comments) تُستخدم لشرح الكود ومش بتتنفذ: تعليق سطر واحد بـ <code>//</code>، وتعليق متعدد الأسطر بين <code>/* … */</code></li>
+      <li>الأقواس المعقوفة <code>{ }</code> بتُستخدم دايمًا لتحديد بداية ونهاية كتلة الأوامر</li>
+    </ul>
+
+    <div class="exercise">✏ <b>تمرين:</b> جرب تعدّل على البرنامج السابق عشان يطبع اسمك بدل "Hello, World!"، وبعدين ضيف سطر تاني يطبع تحية إضافية باستخدام <code>cout</code> تاني.</div>
+  </section>
+
+  <section class="chapter" id="ch4">
+    <h2 class="chap-title"><span class="num">04</span>المتغيرات وأنواع البيانات في C++</h2>
+
+    <h3>1. إيه هو المتغير؟</h3>
+    <p>المتغير هو مساحة مسماة في ذاكرة الحاسوب (RAM) تُستخدم لتخزين قيمة يمكن للبرنامج قراءتها أو تغييرها أثناء التنفيذ. وعشان الحاسوب يستخدم المساحة دي بشكل صحيح، لازم نحدد نوع البيانات اللي هيتم تخزينها فيها، لأن كل نوع محتاج مساحة مختلفة من الذاكرة ويسمح بعمليات مختلفة.</p>
+
+    <h3>2. إزاي تعرّف متغير</h3>
+    <p>الصيغة العامة لتعريف متغير في C++ هي:</p>
+    <pre><code>data_type variable_name = initial_value;</code></pre>
+    <p>مثال عملي:</p>
+    <pre><code><span class="kw">int</span> age = 20;          <span class="com">// متغير من نوع عدد صحيح</span>
+<span class="kw">double</span> price = 49.99;  <span class="com">// متغير من نوع عدد عشري</span>
+<span class="kw">char</span> grade = <span class="str">'A'</span>;      <span class="com">// متغير من نوع حرف واحد</span>
+<span class="kw">bool</span> isPassed = <span class="kw">true</span>;  <span class="com">// متغير من نوع منطقي</span></code></pre>
+    <p>ممكن كمان تعرّف متغير من غير ما تديله قيمة ابتدائية، وبعدين تحدد القيمة له لاحقًا في سطر منفصل:</p>
+    <pre><code><span class="kw">int</span> score;
+score = 85;</code></pre>
+
+    <h3>3. أهم أنواع البيانات الأساسية</h3>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>النوع</th><th>يُستخدم لتخزين</th><th>الحجم</th><th>مثال</th></tr></thead>
+        <tbody>
+          <tr><td><code>int</code></td><td>أعداد صحيحة (بدون فاصلة عشرية)</td><td>4 بايت</td><td><code>int age = 20;</code></td></tr>
+          <tr><td><code>float</code></td><td>أعداد عشرية (دقة عادية)</td><td>4 بايت</td><td><code>float price = 9.99f;</code></td></tr>
+          <tr><td><code>double</code></td><td>أعداد عشرية (دقة أعلى)</td><td>8 بايت</td><td><code>double pi = 3.14159;</code></td></tr>
+          <tr><td><code>char</code></td><td>حرف واحد</td><td>1 بايت</td><td><code>char grade = 'A';</code></td></tr>
+          <tr><td><code>bool</code></td><td>قيمة منطقية: true أو false</td><td>1 بايت</td><td><code>bool isReady = true;</code></td></tr>
+          <tr><td><code>string</code></td><td>نص (مجموعة أحرف)</td><td>متغيرة</td><td><code>string name = "Ali";</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>4. الثوابت (Constants)</h3>
+    <p>أحيانًا نحتاج قيمة لازم متتغيرش أبدًا أثناء تنفيذ البرنامج، زي قيمة ثابت رياضي. في الحالة دي، نستخدم الكلمة المفتاحية <code>const</code> قبل نوع البيانات:</p>
+    <pre><code><span class="kw">const double</span> PI = 3.14159;</code></pre>
+    <p>أي محاولة لاحقة لتغيير قيمة <code>PI</code> هتؤدي لخطأ في الترجمة (compile error).</p>
+
+    <h3>5. قواعد تسمية المتغيرات</h3>
+    <ul>
+      <li>اسم المتغير لازم يبدأ بحرف أو شرطة سفلية <code>_</code>، مش برقم.</li>
+      <li>ممكن يحتوي فقط على حروف وأرقام وشرطات سفلية — من غير مسافات أو رموز خاصة.</li>
+      <li>لغة C++ حساسة لحالة الأحرف، يعني <code>age</code> و<code>Age</code> يُعتبروا متغيرين مختلفين تمامًا.</li>
+      <li>الكلمات المحجوزة في اللغة (زي <code>int</code> أو <code>return</code>) مينفعش تُستخدم كاسم متغير.</li>
+      <li>الأفضل اختيار أسماء واضحة توصف الغرض من المتغير، زي <code>studentAge</code> بدل <code>x</code>.</li>
+    </ul>
+
+    <h3>6. مثال كامل</h3>
+    <p>البرنامج التالي بيعرّف مجموعة متغيرات من أنواع مختلفة وبعدين يطبعها على الشاشة:</p>
+    <pre><code><span class="kw">#include</span> &lt;iostream&gt;
+<span class="kw">using namespace</span> std;
+
+<span class="kw">int</span> main() {
+    string name = <span class="str">"Sarah"</span>;
+    <span class="kw">int</span> age = 22;
+    <span class="kw">double</span> gpa = 3.75;
+    <span class="kw">bool</span> isEnrolled = <span class="kw">true</span>;
+
+    cout &lt;&lt; <span class="str">"Name: "</span> &lt;&lt; name &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"Age: "</span> &lt;&lt; age &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"GPA: "</span> &lt;&lt; gpa &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"Currently enrolled: "</span> &lt;&lt; isEnrolled &lt;&lt; endl;
+    <span class="kw">return</span> 0;
+}</code></pre>
+
+    <div class="exercise">✏ <b>تمرين:</b> ضيف متغير جديد من نوع <code>char</code> يخزن الحرف الأول من اسمك، وبعدين اطبعه باستخدام <code>cout</code>.</div>
+  </section>
+
+  <footer>مقدمة في الحاسب الآلي ولغة C++ — مذكرة مراجعة · 𝐂𝐑𝐄𝐀𝐓𝐈𝐕𝐄 𝐓𝐄𝐀𝐌</footer>
+  </div>
+</body>
+</html>
